@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="dropArea">
+      <p>
+        Перетягніть файл Excel сюди або оберіть його за допомогою кнопки нижче
+      </p>
+      <input type="file" id="fileInput" style="display: none" />
+      <button onclick="chooseFile()">Обрати файл</button>
+    </div>
+
+    <div id="output"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.17.0/dist/xlsx.full.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
