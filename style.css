@@ -7,15 +7,23 @@
     background-color: rebeccapurple;
 }
 
+p {
+    margin-bottom: 12px;
+}
+
 #dropArea {
     border: 2px dashed #ccc;
     padding: 20px;
     text-align: center;
     cursor: pointer;
+    color: #ffffff;
 }
 
 #output {
     margin-top: 20px;
     padding: 10px;
     border: 1px solid #ccc;
+    font-size: 64px;
+    text-align: center;
+    color: #ffffff;
 }
