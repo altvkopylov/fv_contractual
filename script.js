@@ -18,9 +18,13 @@ function handleFile(file) {
         var selectedRange = XLSX.utils.sheet_to_json(sheet, { range: range, header: 1 }); // Отримайте значення з визначеного діапазону
 
         var result = getSum(selectedRange); // Сума
+        let stakes = stakesByComa(selectedRange); // Ставки через кому
 
-        // Вивести значення в елемент з ідентифікатором "output"
-        document.getElementById('output').innerHTML = 'Повернуто: ' + result.sumReturn + '<br> Збережено: ' + result.sumSaved;
+        // Вивести значення в елемент з ідентифікатором "output-sum"
+        document.querySelector('.output-sum').innerHTML = 'Повернуто: ' + result.sumReturn + '<br> Збережено: ' + result.sumSaved;
+        document.querySelector('.output-stakes').innerHTML = 'Ставки: <br>' + stakes;
+
+        console.log(stakesByComa(selectedRange));
     };
     reader.readAsBinaryString(file);
 }
@@ -90,4 +94,15 @@ function getSum(array) {
         'sumReturn': sumReturn,
         'sumSaved': sumSaved
     };
+}
+
+function stakesByComa(array) {
+    let idIndex = array[0].indexOf('Id');
+    let stakes = [];
+
+    for (let i = 1; i < array.length; i++) {
+        stakes.push(array[i][idIndex]);
+    }
+
+    return stakes.join(', ');
 }
