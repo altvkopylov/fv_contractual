@@ -22,7 +22,8 @@ function handleFile(file) {
 
         // Вивести значення в елемент з ідентифікатором "output-sum"
         document.querySelector('.output-sum').innerHTML = 'Повернуто: ' + result.sumReturn + '<br> Збережено: ' + result.sumSaved;
-        document.querySelector('.output-stakes').innerHTML = 'Ставки: <br>' + stakes;
+        document.querySelector('.output-stakes').innerHTML = 'Ставки: <br>' + stakes.stakes;
+        document.querySelector('.output-stakes-count').innerHTML = 'Кількість ставок: ' + stakes.stakesCount;
 
         console.log(stakesByComa(selectedRange));
     };
@@ -104,5 +105,5 @@ function stakesByComa(array) {
         stakes.push(array[i][idIndex]);
     }
 
-    return stakes.join(', ');
+    return {'stakes': stakes.join(', '), 'stakesCount': stakes.length};
 }
