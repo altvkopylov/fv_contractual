@@ -92,8 +92,8 @@ function getSum(array) {
 
     // Повернути значення як об'єкт
     return {
-        'sumReturn': sumReturn,
-        'sumSaved': sumSaved
+        'sumReturn': sumReturn.toFixed(2),
+        'sumSaved': sumSaved.toFixed(2)
     };
 }
 
