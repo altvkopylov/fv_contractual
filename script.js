@@ -20,6 +20,8 @@ function handleFile(file) {
         var result = getSum(selectedRange); // Сума
         let stakes = stakesByComa(selectedRange); // Ставки через кому
 
+        saveToLocalStorage(selectedRange);
+
         // Вивести значення в елемент з ідентифікатором "output-sum"
         //document.querySelector('.output-sum').innerHTML = 'Повернуто: ' + result.sumReturn + '<br> Збережено: ' + result.sumSaved;
         document.querySelector('.output-sumReturn').innerHTML = result.sumReturn;
@@ -27,7 +29,6 @@ function handleFile(file) {
         document.querySelector('.output-stakes').innerHTML = stakes.stakes;
         document.querySelector('.output-stakes-count').innerHTML = stakes.stakesCount;
 
-        console.log(stakesByComa(selectedRange));
     };
     reader.readAsBinaryString(file);
 }
@@ -119,4 +120,22 @@ function clear() {
     document.querySelector('.output-sumSaved').innerHTML = '';
     document.querySelector('.output-stakes').innerHTML = '';
     document.querySelector('.output-stakes-count').innerHTML = '';
+
+    localStorage.clear();
 }
+
+function saveToLocalStorage(array) {
+    localStorage.setItem('sumReturn', getSum(array).sumReturn);
+    localStorage.setItem('sumSaved', getSum(array).sumSaved);
+    localStorage.setItem('stakes', stakesByComa(array).stakes);
+    localStorage.setItem('stakesCount', stakesByComa(array).stakesCount);
+}
+
+function getByLocalStorage() {
+    document.querySelector('.output-sumReturn').innerHTML = localStorage.getItem('sumReturn');
+    document.querySelector('.output-sumSaved').innerHTML = localStorage.getItem('sumSaved');
+    document.querySelector('.output-stakes').innerHTML = localStorage.getItem('stakes');
+    document.querySelector('.output-stakes-count').innerHTML = localStorage.getItem('stakesCount');
+}
+
+document.addEventListener('DOMContentLoaded', getByLocalStorage)
