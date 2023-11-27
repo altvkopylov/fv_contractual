@@ -20,7 +20,9 @@ function handleFile(file) {
         var result = getSum(selectedRange); // Сума
         let stakes = stakesByComa(selectedRange); // Ставки через кому
 
-        saveToLocalStorage(selectedRange);
+        console.log(groupByCurrency(selectedRange))
+
+        //saveToLocalStorage(selectedRange);
 
         // Вивести значення в елемент з ідентифікатором "output-sum"
         //document.querySelector('.output-sum').innerHTML = 'Повернуто: ' + result.sumReturn + '<br> Збережено: ' + result.sumSaved;
@@ -150,3 +152,38 @@ function getByLocalStorage() {
 }
 
 document.addEventListener('DOMContentLoaded', getByLocalStorage)
+
+
+
+function groupByCurrency(data) {
+    let groupedData = {};
+
+    // Пропускаємо перший рядок (заголовки)
+    for (let i = 1; i < data.length; i++) {
+        let row = data[i];
+        let currency = row[data[0].indexOf('Currency')]; // Знаходимо індекс колонки 'Currency' та отримуємо її значення
+
+        // Якщо групи з даною валютою ще немає, створюємо її
+        if (!groupedData[currency]) {
+            groupedData[currency] = {
+                currency: currency,
+                sumReturn: 0,
+                sumSaved: 0
+            };
+        }
+
+        // Додаємо поточний 'Sum in' до суми групи
+        groupedData[currency].sumReturn += Math.round(row[data[0].indexOf('Sum in')]);
+        groupedData[currency].sumSaved += Math.round(row[data[0].indexOf('Sum in')] * (row[data[0].indexOf('Coef')] - 1));
+    }
+
+
+    // Перетворюємо об'єкт у масив, щоб отримати зручний формат результату
+    let result = Object.values(groupedData);
+
+    // Виводимо результат
+    console.log(result);
+
+
+    return result;
+}
