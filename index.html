@@ -15,7 +15,12 @@
             Перетягніть файл Excel сюди або оберіть його за допомогою кнопки
             нижче
           </p>
-          <input type="file" id="fileInput" style="display: none" />
+          <input
+            type="file"
+            id="fileInput"
+            accept=".xlsx, .xls"
+            style="display: none"
+          />
           <button class="btn chooseFileBtn" onclick="chooseFile()">
             Обрати файл
           </button>
@@ -36,6 +41,7 @@
           <p class="output">
             Ставки: <br /><span class="output-stakes"></span>
           </p>
+          <p class="error"></p>
         </div>
       </div>
     </div>

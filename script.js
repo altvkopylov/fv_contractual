@@ -24,10 +24,10 @@ function handleFile(file) {
 
         // Вивести значення в елемент з ідентифікатором "output-sum"
         //document.querySelector('.output-sum').innerHTML = 'Повернуто: ' + result.sumReturn + '<br> Збережено: ' + result.sumSaved;
-        document.querySelector('.output-sumReturn').innerHTML = result.sumReturn;
-        document.querySelector('.output-sumSaved').innerHTML = result.sumSaved;
-        document.querySelector('.output-stakes').innerHTML = stakes.stakes;
-        document.querySelector('.output-stakes-count').innerHTML = stakes.stakesCount;
+        document.querySelector('.output-sumReturn').innerHTML = (result.sumReturn) ? result.sumReturn : '';
+        document.querySelector('.output-sumSaved').innerHTML = (result.sumSaved) ? result.sumSaved : '';
+        document.querySelector('.output-stakes').innerHTML = (stakes.stakes) ? stakes.stakes : '';
+        document.querySelector('.output-stakes-count').innerHTML = (stakes.stakesCount) ? stakes.stakesCount : '';
 
     };
     reader.readAsBinaryString(file);
@@ -82,6 +82,10 @@ function getSum(array) {
     let coefIndex = array[0].indexOf('Coef');
     let sumInIndex = array[0].indexOf('Sum in');
 
+    if (coefIndex == -1 || sumInIndex == -1) {
+        return document.querySelector('.error').innerHTML = 'Неправильний тип файлу. Немає колонки "Coef" чи "Sum in"';
+    }
+
     let sumReturn = 0;
     let sumSaved = 0;
 
@@ -102,6 +106,11 @@ function getSum(array) {
 
 function stakesByComa(array) {
     let idIndex = array[0].indexOf('Id');
+    
+    if (idIndex == -1) {
+        return document.querySelector('.error').innerHTML = 'Неправильний тип файлу. Немає колонки "Id"';
+    }
+
     let stakes = [];
 
     for (let i = 1; i < array.length; i++) {
@@ -121,14 +130,16 @@ function clear() {
     document.querySelector('.output-stakes').innerHTML = '';
     document.querySelector('.output-stakes-count').innerHTML = '';
 
+    document.querySelector('.error').innerHTML = '';
+
     localStorage.clear();
 }
 
 function saveToLocalStorage(array) {
-    localStorage.setItem('sumReturn', getSum(array).sumReturn);
-    localStorage.setItem('sumSaved', getSum(array).sumSaved);
-    localStorage.setItem('stakes', stakesByComa(array).stakes);
-    localStorage.setItem('stakesCount', stakesByComa(array).stakesCount);
+    (getSum(array).sumReturn) ? localStorage.setItem('sumReturn', getSum(array).sumReturn) : '';
+    (getSum(array).sumSaved) ? localStorage.setItem('sumSaved', getSum(array).sumSaved) : '';
+    (stakesByComa(array).stakes) ? localStorage.setItem('stakes', stakesByComa(array).stakes) : '';
+    (stakesByComa(array).stakesCount) ? localStorage.setItem('stakesCount', stakesByComa(array).stakesCount) : '';
 }
 
 function getByLocalStorage() {
