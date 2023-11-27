@@ -21,9 +21,11 @@ function handleFile(file) {
         let stakes = stakesByComa(selectedRange); // Ставки через кому
 
         // Вивести значення в елемент з ідентифікатором "output-sum"
-        document.querySelector('.output-sum').innerHTML = 'Повернуто: ' + result.sumReturn + '<br> Збережено: ' + result.sumSaved;
-        document.querySelector('.output-stakes').innerHTML = 'Ставки: <br>' + stakes.stakes;
-        document.querySelector('.output-stakes-count').innerHTML = 'Кількість ставок: ' + stakes.stakesCount;
+        //document.querySelector('.output-sum').innerHTML = 'Повернуто: ' + result.sumReturn + '<br> Збережено: ' + result.sumSaved;
+        document.querySelector('.output-sumReturn').innerHTML = result.sumReturn;
+        document.querySelector('.output-sumSaved').innerHTML = result.sumSaved;
+        document.querySelector('.output-stakes').innerHTML = stakes.stakes;
+        document.querySelector('.output-stakes-count').innerHTML = stakes.stakesCount;
 
         console.log(stakesByComa(selectedRange));
     };
@@ -106,4 +108,15 @@ function stakesByComa(array) {
     }
 
     return {'stakes': stakes.join(', '), 'stakesCount': stakes.length};
+}
+
+document.querySelector('.clearBtn').addEventListener('click', clear)
+
+function clear() {
+    document.getElementById('fileInput').value = '';
+
+    document.querySelector('.output-sumReturn').innerHTML = '';
+    document.querySelector('.output-sumSaved').innerHTML = '';
+    document.querySelector('.output-stakes').innerHTML = '';
+    document.querySelector('.output-stakes-count').innerHTML = '';
 }

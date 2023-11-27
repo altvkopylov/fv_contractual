@@ -8,18 +8,37 @@
     <title>FB: Contractual</title>
   </head>
   <body>
-    <div id="dropArea">
-      <p>
-        Перетягніть файл Excel сюди або оберіть його за допомогою кнопки нижче
-      </p>
-      <input type="file" id="fileInput" style="display: none" />
-      <button onclick="chooseFile()">Обрати файл</button>
+    <div class="wrapper">
+      <div class="dropArea-external">
+        <div id="dropArea" class="dropArea">
+          <p>
+            Перетягніть файл Excel сюди або оберіть його за допомогою кнопки
+            нижче
+          </p>
+          <input type="file" id="fileInput" style="display: none" />
+          <button class="btn chooseFileBtn" onclick="chooseFile()">
+            Обрати файл
+          </button>
+        </div>
+        <div class="clearArea">
+          <button class="btn clearBtn">Очистити</button>
+        </div>
+      </div>
+      <div class="result">
+        <div class="result-inner">
+          <p class="output">
+            Повернуто: <span class="output-sumReturn"></span>
+          </p>
+          <p class="output">Збережено: <span class="output-sumSaved"></span></p>
+          <p class="output">
+            Кількість ставок: <span class="output-stakes-count"></span>
+          </p>
+          <p class="output">
+            Ставки: <br /><span class="output-stakes"></span>
+          </p>
+        </div>
+      </div>
     </div>
-
-    <div class="output output-sum"></div>
-    <div class="output output-stakes-count"></div>
-    <div class="output output-stakes"></div>
-
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.17.0/dist/xlsx.full.min.js"></script>
     <script src="script.js"></script>
   </body>
