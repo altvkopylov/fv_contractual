@@ -54,7 +54,7 @@
 }
 
 .result-inner span::selection {
-    background-color: #FF267E;;
+    background-color: #FF267E;
     color: #ffffff;
 }
 
@@ -77,4 +77,8 @@
 .error {
     color: red;
     font-size: 32px;
+}
+
+.currency {
+    color: #FF267E
 }

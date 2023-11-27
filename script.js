@@ -17,17 +17,16 @@ function handleFile(file) {
         var range = `A1:${lastColumn}${lastRow}`; // Визначте діапазон комірок
         var selectedRange = XLSX.utils.sheet_to_json(sheet, { range: range, header: 1 }); // Отримайте значення з визначеного діапазону
 
-        var result = getSum(selectedRange); // Сума
         let stakes = stakesByComa(selectedRange); // Ставки через кому
 
         console.log(groupByCurrency(selectedRange))
 
-        //saveToLocalStorage(selectedRange);
+        console.log(groupByCurrency(selectedRange));
+        saveToLocalStorage(selectedRange);
 
-        // Вивести значення в елемент з ідентифікатором "output-sum"
-        //document.querySelector('.output-sum').innerHTML = 'Повернуто: ' + result.sumReturn + '<br> Збережено: ' + result.sumSaved;
-        document.querySelector('.output-sumReturn').innerHTML = (result.sumReturn) ? result.sumReturn : '';
-        document.querySelector('.output-sumSaved').innerHTML = (result.sumSaved) ? result.sumSaved : '';
+        let groupedData = groupByCurrency(selectedRange).groupedData;
+        document.querySelector('.output-return-saved').innerHTML = formatResult(groupedData);
+
         document.querySelector('.output-stakes').innerHTML = (stakes.stakes) ? stakes.stakes : '';
         document.querySelector('.output-stakes-count').innerHTML = (stakes.stakesCount) ? stakes.stakesCount : '';
 
@@ -76,34 +75,7 @@ function findLastNonEmptyCell(sheet) {
         }
     }
 
-    // Якщо всі комірки порожні, повертаємо null або інше значення за замовчуванням
     return null;
-}
-
-function getSum(array) {
-    let coefIndex = array[0].indexOf('Coef');
-    let sumInIndex = array[0].indexOf('Sum in');
-
-    if (coefIndex == -1 || sumInIndex == -1) {
-        return document.querySelector('.error').innerHTML = 'Неправильний тип файлу. Немає колонки "Coef" чи "Sum in"';
-    }
-
-    let sumReturn = 0;
-    let sumSaved = 0;
-
-    for (let i = 1; i < array.length; i++) {
-        let sumItem = '' + array[i][sumInIndex];
-        let coefItem = '' + array[i][coefIndex];
-
-        sumReturn += sumItem * 1;
-        sumSaved += (sumItem * 1) * ((coefItem * 1) - 1);
-    }
-
-    // Повернути значення як об'єкт
-    return {
-        'sumReturn': sumReturn.toFixed(2),
-        'sumSaved': sumSaved.toFixed(2)
-    };
 }
 
 function stakesByComa(array) {
@@ -127,8 +99,7 @@ document.querySelector('.clearBtn').addEventListener('click', clear)
 function clear() {
     document.getElementById('fileInput').value = '';
 
-    document.querySelector('.output-sumReturn').innerHTML = '';
-    document.querySelector('.output-sumSaved').innerHTML = '';
+    document.querySelector('.output-return-saved').innerHTML = '';
     document.querySelector('.output-stakes').innerHTML = '';
     document.querySelector('.output-stakes-count').innerHTML = '';
 
@@ -138,15 +109,15 @@ function clear() {
 }
 
 function saveToLocalStorage(array) {
-    (getSum(array).sumReturn) ? localStorage.setItem('sumReturn', getSum(array).sumReturn) : '';
-    (getSum(array).sumSaved) ? localStorage.setItem('sumSaved', getSum(array).sumSaved) : '';
+
+    (groupByCurrency(array)) ? localStorage.setItem('result', JSON.stringify(groupByCurrency(array).groupedData)) : '';
     (stakesByComa(array).stakes) ? localStorage.setItem('stakes', stakesByComa(array).stakes) : '';
     (stakesByComa(array).stakesCount) ? localStorage.setItem('stakesCount', stakesByComa(array).stakesCount) : '';
 }
 
 function getByLocalStorage() {
-    document.querySelector('.output-sumReturn').innerHTML = localStorage.getItem('sumReturn');
-    document.querySelector('.output-sumSaved').innerHTML = localStorage.getItem('sumSaved');
+    resultData = localStorage.getItem('result');
+    document.querySelector('.output-return-saved').innerHTML = formatResult(JSON.parse(resultData))
     document.querySelector('.output-stakes').innerHTML = localStorage.getItem('stakes');
     document.querySelector('.output-stakes-count').innerHTML = localStorage.getItem('stakesCount');
 }
@@ -156,14 +127,18 @@ document.addEventListener('DOMContentLoaded', getByLocalStorage)
 
 
 function groupByCurrency(data) {
-    let groupedData = {};
+    let coefIndex = data[0].indexOf('Coef');
+    let sumInIndex = data[0].indexOf('Sum in');
+    let CurrencyIndex = data[0].indexOf('Currency');
 
-    // Пропускаємо перший рядок (заголовки)
+    if (coefIndex == -1 || sumInIndex == -1 || CurrencyIndex == -1) {
+        return document.querySelector('.error').innerHTML = 'Неправильний тип файлу';
+    }
+
+    let groupedData = {};
     for (let i = 1; i < data.length; i++) {
         let row = data[i];
-        let currency = row[data[0].indexOf('Currency')]; // Знаходимо індекс колонки 'Currency' та отримуємо її значення
-
-        // Якщо групи з даною валютою ще немає, створюємо її
+        let currency = row[data[0].indexOf('Currency')];
         if (!groupedData[currency]) {
             groupedData[currency] = {
                 currency: currency,
@@ -171,19 +146,19 @@ function groupByCurrency(data) {
                 sumSaved: 0
             };
         }
-
-        // Додаємо поточний 'Sum in' до суми групи
         groupedData[currency].sumReturn += Math.round(row[data[0].indexOf('Sum in')]);
         groupedData[currency].sumSaved += Math.round(row[data[0].indexOf('Sum in')] * (row[data[0].indexOf('Coef')] - 1));
     }
-
-
-    // Перетворюємо об'єкт у масив, щоб отримати зручний формат результату
     let result = Object.values(groupedData);
+    return {'groupedData': result};
+}
 
-    // Виводимо результат
-    console.log(result);
-
-
-    return result;
+function formatResult(data) {
+    let resultString = '';
+    for (let currency in data) {
+        resultString += `<span class="currency">${data[currency].currency}</span>` + ':<br>';
+        resultString += 'Повернуто: ' + data[currency].sumReturn + '<br>';
+        resultString += 'Збережено: ' + data[currency].sumSaved + '<br><br>';
+    }
+    return resultString;
 }
