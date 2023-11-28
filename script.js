@@ -2,7 +2,14 @@ function chooseFile() {
     document.getElementById('fileInput').click();
 }
 
+function handleFiles(files) {
+    for (var i = 0; i < files.length; i++) {
+        handleFile(files[i]);
+    }
+}
+
 function handleFile(file) {
+    clear();
     var reader = new FileReader();
     reader.onload = function (e) {
         var data = e.target.result;
@@ -19,10 +26,9 @@ function handleFile(file) {
 
         let stakes = stakesByComa(selectedRange); // Ставки через кому
 
-        console.log(groupByCurrency(selectedRange))
-
-        console.log(groupByCurrency(selectedRange));
         saveToLocalStorage(selectedRange);
+
+        console.log(groupByCurrency(selectedRange))
 
         let groupedData = groupByCurrency(selectedRange).groupedData;
         document.querySelector('.output-return-saved').innerHTML = formatResult(groupedData);
@@ -36,13 +42,13 @@ function handleFile(file) {
 
 function handleDrop(event) {
     event.preventDefault();
-    var files = event.dataTransfer.files;
-    handleFile(files[0]);
+    let files = event.dataTransfer.files;
+    handleFiles(files);
 }
 
 function handleInputChange(event) {
-    var files = event.target.files;
-    handleFile(files[0]);
+    let files = event.target.files;
+    handleFiles(files);
 }
 
 var dropArea = document.getElementById('dropArea');
